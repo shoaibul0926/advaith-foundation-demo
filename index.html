@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Advaith Foundation — AI Enablement Demo</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel-border: #272b35;
+    --text: #e7e9ee;
+    --muted: #9aa1ad;
+    --accent: #5b8cff;
+    --accent-soft: rgba(91,140,255,0.12);
+    --good: #3ecf8e;
+    --warn: #e0a43c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+  }
+  header {
+    margin-bottom: 48px;
+  }
+  .eyebrow {
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-size: 32px;
+    margin: 0 0 12px;
+    font-weight: 700;
+  }
+  header p {
+    color: var(--muted);
+    font-size: 16px;
+    max-width: 640px;
+    margin: 0;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .card h2 {
+    margin: 0;
+    font-size: 20px;
+  }
+  .tag {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .tag.live { background: rgba(62,207,142,0.14); color: var(--good); }
+  .tag.onsite { background: rgba(224,164,60,0.14); color: var(--warn); }
+  .maps-to {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .maps-to b { color: var(--text); font-weight: 600; }
+  .desc {
+    color: var(--muted);
+    font-size: 14.5px;
+  }
+  .actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 6px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid var(--panel-border);
+  }
+  .btn.primary {
+    background: var(--accent);
+    color: #0b0d11;
+    border-color: var(--accent);
+  }
+  .btn.secondary {
+    background: transparent;
+    color: var(--text);
+  }
+  .btn.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  footer {
+    margin-top: 56px;
+    color: var(--muted);
+    font-size: 13px;
+    border-top: 1px solid var(--panel-border);
+    padding-top: 20px;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">Stratos Tech × Advaith Foundation</div>
+      <h1>AI Enablement — Demo Hub</h1>
+      <p>Working demos built against Advaith's own requirements for teachers, students, and school admin. Each tile links to a live demo or the demo's source.</p>
+    </header>
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-top">
+          <h2>EduPilot AI</h2>
+          <span class="tag live">Live demo</span>
+        </div>
+        <div class="maps-to">Maps to: <b>Teacher &amp; student asks</b> — curated resources, assignment/question-paper generation, and AI-assisted mistake feedback for student work.</div>
+        <div class="desc">Teacher and student dashboards, assignment generator, and submission review — runs free for any visitor, no AI credits required for the core walkthrough.</div>
+        <div class="actions">
+          <a class="btn primary" href="https://edupilot-ai-nine.vercel.app/" target="_blank" rel="noopener">Open live demo →</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <h2>Meeting Notes</h2>
+          <span class="tag onsite">On-site demo</span>
+        </div>
+        <div class="maps-to">Maps to: <b>Admin ask</b> — a meeting-room tool that listens and auto-generates minutes, action points, and follow-ups.</div>
+        <div class="desc">Local app (mic/system audio capture) run from a laptop during the in-person session — not hosted online, so there's no public link to click here.</div>
+        <div class="actions">
+          <a class="btn secondary" href="https://github.com/shoaibul0926/meeting-notes-demo" target="_blank" rel="noopener">View source →</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <h2>Ankur Newsletter</h2>
+          <span class="tag live">Live demo</span>
+        </div>
+        <div class="maps-to">Maps to: <b>Newsletter automation</b> — the quick win scoped alongside the main three asks.</div>
+        <div class="desc">Turns submitted stories/photos into a formatted newsletter issue automatically.</div>
+        <div class="actions">
+          <a class="btn primary" href="https://ankur-newsletter.vercel.app/" target="_blank" rel="noopener">Open live demo →</a>
+        </div>
+      </div>
+
+    </div>
+
+    <footer>
+      Prepared by Shoaibul (Stratos Tech) for Advaith Foundation. Source repos for EduPilot AI and Ankur Newsletter are private — reach out for access.
+    </footer>
+  </div>
+</body>
+</html>
