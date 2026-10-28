@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meeting Notes</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font-family: system-ui, -apple-system, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 16px; line-height: 1.5; }
+  h1 { font-size: 1.4rem; margin-bottom: 4px; }
+  .meta { color: #666; font-size: 0.9rem; margin-bottom: 24px; }
+  .status { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; }
+  .status.processing { background: #fff3cd; color: #856404; }
+  .status.ready { background: #d4edda; color: #155724; }
+  .status.failed { background: #f8d7da; color: #721c24; }
+  section { margin-bottom: 24px; }
+  h2 { font-size: 1.05rem; margin-bottom: 8px; }
+  ul { padding-left: 20px; }
+  audio { width: 100%; }
+  details summary { cursor: pointer; font-weight: 600; }
+  #transcript { white-space: pre-wrap; font-size: 0.92rem; color: #333; }
+  #error { color: #a33; }
+</style>
+</head>
+<body>
+  <h1 id="title">Loading…</h1>
+  <div class="meta"><span id="status" class="status"></span> · <span id="createdAt"></span></div>
+
+  <div id="content"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+    // Safe to expose: these identify the Firebase project, not secrets. Access is enforced by
+    // Firestore/Storage security rules (public read, write blocked except from Cloud Functions).
+    const firebaseConfig = {
+      apiKey: "AIzaSyBtVLrXSOuUEsL97CiaVJVndntwJBQzYHE",
+      authDomain: "meeting-recorder-e330c.firebaseapp.com",
+      projectId: "meeting-recorder-e330c",
+      storageBucket: "meeting-recorder-e330c.firebasestorage.app"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const params = new URLSearchParams(location.search);
+    const meetingId = params.get("id");
+    const titleEl = document.getElementById("title");
+    const statusEl = document.getElementById("status");
+    const createdAtEl = document.getElementById("createdAt");
+    const contentEl = document.getElementById("content");
+
+    function esc(str) {
+      return String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+
+    if (!meetingId) {
+      titleEl.textContent = "No meeting specified";
+      contentEl.innerHTML = "<p>Open this page with a link like <code>?id=MEETING_ID</code>.</p>";
+    } else {
+      onSnapshot(doc(db, "meetings", meetingId), (snap) => {
+        if (!snap.exists()) {
+          titleEl.textContent = "Meeting not found";
+          return;
+        }
+        const data = snap.data();
+        titleEl.textContent = data.title || "Meeting notes";
+        statusEl.textContent = data.status;
+        statusEl.className = `status ${data.status}`;
+        createdAtEl.textContent = data.createdAt ? data.createdAt.toDate().toLocaleString() : "";
+
+        let html = "";
+        if (data.status === "processing") {
+          html += "<p>Transcribing and summarizing… this page updates automatically when ready.</p>";
+        }
+        if (data.status === "failed") {
+          html += `<p id="error">Processing failed: ${esc(data.error || "unknown error")}. The raw recording is still available below.</p>`;
+        }
+        if (data.notes) {
+          html += `<section><h2>Summary</h2><p>${esc(data.notes.summary || "")}</p></section>`;
+          if (data.notes.keyPoints && data.notes.keyPoints.length) {
+            html += `<section><h2>Key Points</h2><ul>${data.notes.keyPoints.map((p) => `<li>${esc(p)}</li>`).join("")}</ul></section>`;
+          }
+          if (data.notes.actionItems && data.notes.actionItems.length) {
+            html += `<section><h2>Action Items</h2><ul>${data.notes.actionItems.map((a) => `<li>${esc(a)}</li>`).join("")}</ul></section>`;
+          }
+        }
+        if (data.transcript) {
+          html += `<details><summary>Full transcript</summary><div id="transcript">${esc(data.transcript)}</div></details>`;
+        }
+        if (data.audioUrl) {
+          html += `<section><h2>Recording</h2><audio controls src="${esc(data.audioUrl)}"></audio></section>`;
+        }
+        contentEl.innerHTML = html;
+      });
+    }
+  </script>
+</body>
+</html>
